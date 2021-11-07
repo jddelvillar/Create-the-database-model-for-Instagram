@@ -8,23 +8,45 @@ from eralchemy import render_er
 
 Base = declarative_base()
 
-class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
+class comments(Base):
+    __tablename__='comments'
+    idComm = Column(Integer, primary_key=True)
+    comment_text = Column(String(250))
+    author_id = Column(Integer)
+    post_id = Column(Integer)
+   
 
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person)
+class Media(Base):
+    __tablename__='media'
+    idMed = Column(Integer, primary_key=True)
+    Type = Column(String(250))
+    Url = Column(String(250))
+    post_id = Column(Integer)
+    
+class Users(Base):
+    __tablename__='users'
+    userId = Column(Integer, primary_key=True)
+    idComm = Column(Integer, ForeignKey('comments.idComm'))
+    idMed = Column(Integer, ForeignKey('media.idMed'))
+    Username = Column(String(250))
+    Firstsname = Column(String(250))
+    lastname = Column(String(250))
+    email = Column(String(150))
+    comments = relationship(comments)
+    Media = relationship(Media)
+    
+
+class Favorites(Base):
+    __tablename__='favorites'
+    favId = Column(Integer, primary_key=True)
+    idComm = Column(Integer, ForeignKey('comments.idComm'))
+    idMed = Column(Integer, ForeignKey('media.idMed'))
+    userId = Column(Integer, ForeignKey('users.userId'))
+    comments = relationship(comments)
+    Media = relationship(Media)
+    users = relationship(Users)
+   
+    
 
     def to_dict(self):
         return {}
